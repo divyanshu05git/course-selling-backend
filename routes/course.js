@@ -20,7 +20,7 @@ courseRouter.post("/purchase",userAuth,async(req,res)=>{
     })
 })
 
-courseRouter.get("/preview",userAuth,async(req,res)=>{
+courseRouter.get("/preview",async(req,res)=>{
     const courses=await courseModel.find({})
 
     res.json({
