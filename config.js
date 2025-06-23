@@ -1,4 +1,4 @@
-const JWT_SECRET="1274fhyvn"
+const JWT_SECRET=process.env.JWT_SECRET
 
 
 module.exports={
