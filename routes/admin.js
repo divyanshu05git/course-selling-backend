@@ -1,13 +1,18 @@
 const {Router}=require("express")
 const jwt=require("jsonwebtoken")
+const bcrypt=require("bcrypt");
 const {JWT_SECRET} =require("../config");
 const { courseModel } = require("../db");
+const z = require("zod");
 
 const adminRouter=Router();
 
 adminRouter.post("/signup",async (req,res)=>{
     const requiredBody=z.object({
-        email:z.string().email()
+        email:z.string().email(),
+        password: z.string().min(6),
+        firstName: z.string(),
+        lastName: z.string()
     })
 
     const { email, password, firstName, lastName}=req.body;
@@ -43,7 +48,7 @@ adminRouter.post("/signup",async (req,res)=>{
 adminRouter.post("/signin",async(req,res)=>{
     const {email ,password}=req.body
     
-        const user= await userModel.findOne({
+        const user= await adminModel.findOne({
             email:email
         })
     
@@ -96,7 +101,7 @@ adminRouter.put("/course",adminAuth,async(req,res)=>{
         title:title,
         description:description,
         imageUrl:imageUrl,
-        prixe:price
+        price:price
     })
 
     res.json({
