@@ -4,7 +4,7 @@ const {z}=require("zod")
 const jwt=require("jsonwebtoken")
 const {JWT_SECRET} =require("../config")
 
-const {userModel,purchaseModel}=require("../db")
+const {userModel,purchaseModel,courseModel}=require("../db")
 const { userAuth } = require("../middlewares/userMiddleware")
 
 const userRouter=Router();
@@ -73,11 +73,17 @@ userRouter.post("/signin",async(req,res)=>{
 userRouter.get("/purchases",userAuth,async(req,res)=>{
     const userId=req.userId;
 
-    const course=await purchaseModel.find({
+    const purchases=await purchaseModel.find({
         userId:userId
     })
+
+    const courseData=await courseModel.find({
+        _id:{$in:purchases.map(x=>x.courseId)}
+    })
+
     res.json({
-        course
+        purchases,
+        courseData
     })
 })
 
