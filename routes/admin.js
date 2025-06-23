@@ -3,6 +3,7 @@ const jwt=require("jsonwebtoken")
 const bcrypt=require("bcrypt");
 const {JWT_SECRET} =require("../config");
 const { courseModel ,adminModel} = require("../db");
+const { adminAuth } = require("../middlewares/adminMiddleware");
 const z = require("zod");
 
 const adminRouter=Router();
@@ -94,7 +95,7 @@ adminRouter.put("/course",adminAuth,async(req,res)=>{
 
     const {title,description,imageUrl,price,courseId}= req.body;
 
-    const course=await courseModel.updateOne({
+    await courseModel.updateOne({
         _id:courseId,
         creatorId:adminId
     },{
@@ -112,7 +113,7 @@ adminRouter.put("/course",adminAuth,async(req,res)=>{
 })
 
 adminRouter.get("/course/bulk",adminAuth,async(req,res)=>{
-    const adminId=adminId;
+    const adminId=req.userId;
 
     const courses=await courseModel.find({
         creatorId:adminId
